@@ -76,10 +76,6 @@
             android:text="Resultado: "
             android:textSize="24sp"
             android:layout_marginTop="16dp"/>
-
     </LinearLayout>
-
-
-
 
 </androidx.constraintlayout.widget.ConstraintLayout>

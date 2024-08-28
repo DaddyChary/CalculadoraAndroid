@@ -110,6 +110,7 @@ public class MainActivity extends AppCompatActivity {
                         break;
                 }
             }
+
             if (resultado == (int) resultado) {
                 tvResultado.setText("Resultado: " + (int) resultado);
             }
