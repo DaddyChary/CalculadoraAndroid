@@ -1,5 +1,6 @@
 package com.example.lacalculadoraof;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
@@ -16,10 +17,11 @@ public class MainActivity extends AppCompatActivity {
 
     private EditText etNumero;
     private TextView tvResultado;
-    private Button btnSumar, btnRestar, btnMultiplicar, btnDividir, btnIgual;
+    private Button btnSumar, btnRestar, btnMultiplicar, btnDividir, btnIgual, btnC, btnHistorial;
 
     private ArrayList<Double> numeros = new ArrayList<>();
     private ArrayList<String> operaciones = new ArrayList<>();
+    private ArrayList<String> historial = new ArrayList<>(); // Lista para almacenar el historial
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -33,6 +35,8 @@ public class MainActivity extends AppCompatActivity {
         btnMultiplicar = findViewById(R.id.btnMultiplicar);
         btnDividir = findViewById(R.id.btnDividir);
         btnIgual = findViewById(R.id.btnIgual);
+        btnC = findViewById(R.id.btnC);
+        btnHistorial = findViewById(R.id.btnHistorial);
 
         btnSumar.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
@@ -64,6 +68,17 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+        btnC.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                limpiar();
+            }
+        });
+
+        btnHistorial.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                mostrarHistorial();
+            }
+        });
     }
 
     private void guardarNumeroYOperacion(String op) {
@@ -78,6 +93,19 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    private void mostrarHistorial() {
+        Intent intent = new Intent(this, Historial.class);
+        intent.putStringArrayListExtra("historial", historial);
+        startActivity(intent);
+    }
+
+    private void limpiar() {
+        numeros.clear();
+        operaciones.clear();
+        etNumero.setText("");
+        tvResultado.setText("Resultado:");
+    }
+
     private void calcularResultado() {
         String numeroIngresado = etNumero.getText().toString();
         if (!numeroIngresado.isEmpty()) {
@@ -85,6 +113,7 @@ public class MainActivity extends AppCompatActivity {
             numeros.add(numero);
 
             double resultado = numeros.get(0);
+            StringBuilder operacionCompleta = new StringBuilder(String.valueOf(numeros.get(0)));
 
             for (int i = 0; i < operaciones.size(); i++) {
                 String operacion = operaciones.get(i);
@@ -109,16 +138,21 @@ public class MainActivity extends AppCompatActivity {
                         }
                         break;
                 }
+                operacionCompleta.append(" ").append(operacion).append(" ").append(numeroSiguiente);
             }
+
+            // Almacenar en el historial
 
             if (resultado == (int) resultado) {
                 tvResultado.setText("Resultado: " + (int) resultado);
-            }
-            else {
+            } else {
                 tvResultado.setText("Resultado: " + resultado);
             }
+
             numeros.clear();
             operaciones.clear();
+            operacionCompleta.append(" = ").append(resultado);
+            historial.add(operacionCompleta.toString());
             etNumero.setText("");
         } else {
             Toast.makeText(this, "Por favor ingrese un número", Toast.LENGTH_SHORT).show();
