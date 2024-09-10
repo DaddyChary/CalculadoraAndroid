@@ -30,5 +30,4 @@ public class Historial extends AppCompatActivity{
 
         btnVolver.setOnClickListener(v -> finish());
     }
-
 }
